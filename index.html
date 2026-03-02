@@ -40,7 +40,7 @@ button {
 button:hover {
     background:#0086cc;
 }
-input {
+input[type="text"] {
     padding:8px;
     border-radius:5px;
     border:none;
@@ -103,16 +103,16 @@ Hangar Capacity: 3</p>
 <p>Select 8 routes to restart:</p>
 
 <div class="route-grid">
-<div class="route"><input type="checkbox" value="LHR"> LHR</div>
-<div class="route"><input type="checkbox" value="JFK"> JFK</div>
-<div class="route"><input type="checkbox" value="SYD"> SYD</div>
-<div class="route"><input type="checkbox" value="SIN"> SIN</div>
-<div class="route"><input type="checkbox" value="NRT"> NRT</div>
-<div class="route"><input type="checkbox" value="PVG"> PVG</div>
-<div class="route"><input type="checkbox" value="ICN"> ICN</div>
-<div class="route"><input type="checkbox" value="BKK"> BKK</div>
-<div class="route"><input type="checkbox" value="TPE"> TPE</div>
-<div class="route"><input type="checkbox" value="MNL"> MNL</div>
+<div class="route"><label><input type="checkbox" value="LHR"> LHR</label></div>
+<div class="route"><label><input type="checkbox" value="JFK"> JFK</label></div>
+<div class="route"><label><input type="checkbox" value="SYD"> SYD</label></div>
+<div class="route"><label><input type="checkbox" value="SIN"> SIN</label></div>
+<div class="route"><label><input type="checkbox" value="NRT"> NRT</label></div>
+<div class="route"><label><input type="checkbox" value="PVG"> PVG</label></div>
+<div class="route"><label><input type="checkbox" value="ICN"> ICN</label></div>
+<div class="route"><label><input type="checkbox" value="BKK"> BKK</label></div>
+<div class="route"><label><input type="checkbox" value="TPE"> TPE</label></div>
+<div class="route"><label><input type="checkbox" value="MNL"> MNL</label></div>
 </div>
 
 <br>
@@ -151,10 +151,10 @@ Storm Ops Simulation | Aviation Crisis Experience
 </footer>
 
 <script>
-let time = 60 * 60;
-let timer = setInterval(function() {
-    let minutes = Math.floor(time / 60);
-    let seconds = time % 60;
+var time = 60 * 60;
+var timer = setInterval(function() {
+    var minutes = Math.floor(time / 60);
+    var seconds = time % 60;
     document.getElementById("countdown").innerHTML =
         (minutes < 10 ? "0" : "") + minutes + ":" +
         (seconds < 10 ? "0" : "") + seconds;
@@ -166,7 +166,7 @@ let timer = setInterval(function() {
 }, 1000);
 
 function checkWind() {
-    let code = document.getElementById("windCode").value;
+    var code = document.getElementById("windCode").value.trim();
     if(code === "0740") {
         document.getElementById("windResult").innerHTML = 
         "<span class='success'>Correct. Fleet Protected.</span>";
@@ -178,11 +178,12 @@ function checkWind() {
 }
 
 function checkRoutes() {
-    let checked = document.querySelectorAll("input[type=checkbox]:checked");
-    let correctRoutes = ["LHR","JFK","SYD","SIN","PVG","NRT","ICN","BKK"];
-    let selected = [];
-    checked.forEach(c => selected.push(c.value));
-    if(selected.length === 8 && correctRoutes.every(r => selected.includes(r))) {
+    var checked = document.querySelectorAll("input[type=checkbox]:checked");
+    var correctRoutes = ["LHR","JFK","SYD","SIN","PVG","NRT","ICN","BKK"];
+    var selected = [];
+    checked.forEach(function(c) { selected.push(c.value); });
+    var allCorrect = selected.length === 8 && correctRoutes.every(function(r) { return selected.includes(r); });
+    if(allCorrect) {
         document.getElementById("routeResult").innerHTML =
         "<span class='success'>Correct Dispatch Sequence. Restart Initiated.</span>";
         document.getElementById("phase3").style.display = "block";
@@ -193,7 +194,7 @@ function checkRoutes() {
 }
 
 function checkComm() {
-    let word = document.getElementById("commCode").value.toUpperCase();
+    var word = document.getElementById("commCode").value.trim().toUpperCase();
     if(word === "SARGE") {
         document.getElementById("commResult").innerHTML =
         "<span class='success'>Airport Reopens. You Escaped the Storm!</span>";
@@ -204,14 +205,14 @@ function checkComm() {
 }
 
 function inject() {
-    let events = [
+    var events = [
         "Runway reopening delayed 2 hours.",
         "Crew fatigue violation detected.",
         "VIP government passenger requires priority.",
         "#CathayChaos trending on social media.",
         "Unexpected aircraft maintenance issue."
     ];
-    let random = events[Math.floor(Math.random()*events.length)];
+    var random = events[Math.floor(Math.random()*events.length)];
     document.getElementById("injectResult").innerHTML = random;
 }
 </script>
