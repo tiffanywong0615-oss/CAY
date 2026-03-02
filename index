@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Storm Ops: Ragasa Lockdown</title>
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#0a1f33,#123a5c);
+    color: white;
+    margin:0;
+    padding:0;
+}
+header {
+    background:#06121f;
+    padding:20px;
+    text-align:center;
+    font-size:28px;
+    letter-spacing:2px;
+}
+.container {
+    padding:20px;
+}
+.panel {
+    background:#0f2c47;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,150,255,0.3);
+}
+button {
+    background:#00a8ff;
+    border:none;
+    padding:10px 20px;
+    border-radius:6px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+button:hover {
+    background:#0086cc;
+}
+input {
+    padding:8px;
+    border-radius:5px;
+    border:none;
+    margin:5px;
+}
+.timer {
+    font-size:22px;
+    color:#00ffcc;
+}
+.success {
+    color:#00ff88;
+    font-weight:bold;
+}
+.error {
+    color:#ff4d4d;
+}
+.route-grid {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+}
+.route {
+    background:#163f66;
+    padding:10px;
+    border-radius:6px;
+}
+footer {
+    text-align:center;
+    padding:15px;
+    font-size:12px;
+    background:#06121f;
+}
+</style>
+</head>
+<body>
+
+<header>
+✈️ STORM OPS: RAGASA LOCKDOWN
+<div class="timer">Time Remaining: <span id="countdown">60:00</span></div>
+</header>
+
+<div class="container">
+
+<div class="panel">
+<h2>Phase 1 – Wind Code</h2>
+<p>Wind Speed: 185 km/h<br>
+Exposure: 12 hours<br>
+Hangar Capacity: 3</p>
+
+<p>Formula: Wind × Exposure ÷ Hangar</p>
+
+<input type="text" id="windCode" placeholder="Enter 4 digit code">
+<button onclick="checkWind()">Unlock</button>
+<p id="windResult"></p>
+</div>
+
+<div class="panel" id="phase2" style="display:none;">
+<h2>Phase 2 – Dispatch Grid</h2>
+
+<p>Select 8 routes to restart:</p>
+
+<div class="route-grid">
+<div class="route"><input type="checkbox" value="LHR"> LHR</div>
+<div class="route"><input type="checkbox" value="JFK"> JFK</div>
+<div class="route"><input type="checkbox" value="SYD"> SYD</div>
+<div class="route"><input type="checkbox" value="SIN"> SIN</div>
+<div class="route"><input type="checkbox" value="NRT"> NRT</div>
+<div class="route"><input type="checkbox" value="PVG"> PVG</div>
+<div class="route"><input type="checkbox" value="ICN"> ICN</div>
+<div class="route"><input type="checkbox" value="BKK"> BKK</div>
+<div class="route"><input type="checkbox" value="TPE"> TPE</div>
+<div class="route"><input type="checkbox" value="MNL"> MNL</div>
+</div>
+
+<br>
+<button onclick="checkRoutes()">Confirm Dispatch</button>
+<p id="routeResult"></p>
+</div>
+
+<div class="panel" id="phase3" style="display:none;">
+<h2>Phase 3 – Communication Code</h2>
+
+<p>Draft message must begin with:</p>
+<ul>
+<li>Safety first</li>
+<li>Apology</li>
+<li>Recovery timeline</li>
+<li>Guidance</li>
+</ul>
+
+<p>Enter 5-letter unlock word:</p>
+
+<input type="text" id="commCode" placeholder="Enter word">
+<button onclick="checkComm()">Unlock Airport</button>
+<p id="commResult"></p>
+</div>
+
+<div class="panel">
+<h2>Crisis Inject</h2>
+<button onclick="inject()">Trigger Random Event</button>
+<p id="injectResult"></p>
+</div>
+
+</div>
+
+<footer>
+Storm Ops Simulation | Aviation Crisis Experience
+</footer>
+
+<script>
+let time = 60 * 60;
+let timer = setInterval(function() {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    document.getElementById("countdown").innerHTML =
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
+    time--;
+    if (time < 0) {
+        clearInterval(timer);
+        alert("Time expired. Airport remains closed.");
+    }
+}, 1000);
+
+function checkWind() {
+    let code = document.getElementById("windCode").value;
+    if(code === "0740") {
+        document.getElementById("windResult").innerHTML = 
+        "<span class='success'>Correct. Fleet Protected.</span>";
+        document.getElementById("phase2").style.display = "block";
+    } else {
+        document.getElementById("windResult").innerHTML = 
+        "<span class='error'>Incorrect code.</span>";
+    }
+}
+
+function checkRoutes() {
+    let checked = document.querySelectorAll("input[type=checkbox]:checked");
+    let correctRoutes = ["LHR","JFK","SYD","SIN","PVG","NRT","ICN","BKK"];
+    let selected = [];
+    checked.forEach(c => selected.push(c.value));
+    if(selected.length === 8 && correctRoutes.every(r => selected.includes(r))) {
+        document.getElementById("routeResult").innerHTML =
+        "<span class='success'>Correct Dispatch Sequence. Restart Initiated.</span>";
+        document.getElementById("phase3").style.display = "block";
+    } else {
+        document.getElementById("routeResult").innerHTML =
+        "<span class='error'>Dispatch imbalance. Review priorities.</span>";
+    }
+}
+
+function checkComm() {
+    let word = document.getElementById("commCode").value.toUpperCase();
+    if(word === "SARGE") {
+        document.getElementById("commResult").innerHTML =
+        "<span class='success'>Airport Reopens. You Escaped the Storm!</span>";
+    } else {
+        document.getElementById("commResult").innerHTML =
+        "<span class='error'>Messaging misaligned.</span>";
+    }
+}
+
+function inject() {
+    let events = [
+        "Runway reopening delayed 2 hours.",
+        "Crew fatigue violation detected.",
+        "VIP government passenger requires priority.",
+        "#CathayChaos trending on social media.",
+        "Unexpected aircraft maintenance issue."
+    ];
+    let random = events[Math.floor(Math.random()*events.length)];
+    document.getElementById("injectResult").innerHTML = random;
+}
+</script>
+
+</body>
+</html>
